@@ -334,6 +334,7 @@ namespace google { namespace protobuf { namespace compiler { namespace objective
       field_generators_.get(descriptor_->field(i)).GenerateSynthesizeSource(printer);
     }
 
+    printer->Print("#if !__has_feature(objc_arc)\n");
     printer->Print("- (void) dealloc {\n");
     printer->Indent();
     for (int i = 0; i < descriptor_->field_count(); i++) {
@@ -343,7 +344,7 @@ namespace google { namespace protobuf { namespace compiler { namespace objective
     printer->Print(
       "  [super dealloc];\n"
       "}\n");
-
+    printer->Print("#endif\n");
     printer->Print(
       "- (id) init {\n"
       "  if ((self = [super init])) {\n");
@@ -392,7 +393,7 @@ namespace google { namespace protobuf { namespace compiler { namespace objective
 
     printer->Print(
       "+ ($classname$_Builder*) builder {\n"
-      "  return [[[$classname$_Builder alloc] init] autorelease];\n"
+      "  return [[$classname$_Builder alloc] init];\n"
       "}\n"
       "+ ($classname$_Builder*) builderWithPrototype:($classname$*) prototype {\n"
       "  return [[$classname$ builder] mergeFrom:prototype];\n"

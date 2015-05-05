@@ -175,9 +175,13 @@ namespace google { namespace protobuf { namespace compiler {namespace objectivec
         "dependency", FileClassName(file_->dependency(i)));
     }
 
+    printer->Print("#if !__has_feature(objc_arc)\n");
     printer->Print(
       "extensionRegistry = [registry retain];\n");
-
+    printer->Print("#else\n");
+    printer->Print(
+      "extensionRegistry = registry;\n");
+    printer->Print("#endif\n");
     printer->Outdent();
     printer->Outdent();
 
